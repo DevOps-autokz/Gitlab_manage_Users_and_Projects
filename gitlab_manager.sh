@@ -1,9 +1,10 @@
 #!/bin/bash
-[ -f .env ] && . .env
-# uncomment and fill variables below,
-# or insert them in .env file
-# token=### insert your own gitlab token
-# GITLAB_URL=### insert Gitlab server's address (e.g. https://gitlab.com or your own one)
+SCRIPT_DIR="$HOME/scripts/gitlab_manager"
+[[ -f $SCRIPT_DIR/.env ]] && . $SCRIPT_DIR/.env
+
+# Uncomment and fill variables below, or insert them in .env file
+# token=''    insert your own gitlab token
+# GITLAB_URL='' insert Gitlab server's address (e.g. https://gitlab.com or your own one)
 PASSWORD="change@me"
 
 # Set Color Variables and Functions
@@ -47,7 +48,7 @@ read -p $"$(ColorLightCyan 'Please, enter the username (e.g. john-b): ')" USERNA
 read -p $"$(ColorLightCyan 'Please, enter e-mail: ')" EMAIL
 [[ -z ${EMAIL} ]]  && { echo -e $(ColorRed 'Please, start over and enter e-mail ') ; exit 1 ; }
 
-curl -s --request POST -d "name=$NAME&username=$USERNAME&password=${PASSWORD}&email=$EMAIL&commit_email=$EMAIL&theme_id=11&color_scheme_id=2" --header "PRIVATE-TOKEN: ${token}" ${GITLAB_URL}/api/v4/users  && \
+curl -s --request POST -d "name=$NAME&username=$USERNAME&password=${PASSWORD}&email=$EMAIL&commit_email=$EMAIL&theme_id=11&color_scheme_id=2" --header "PRIVATE-TOKEN: ${token}" ${GITLAB_URL}/api/v4/users &>/dev/null && \
 echo -e $(ColorLightCyan "user $USERNAME has been successfully created")
 }
 
@@ -109,7 +110,7 @@ fi
 
 # Set access level to user:
 function change_access_level {
-curl --request POST -d "user_id=$USER_ID&access_level=$ACCESS_LEVEL" --header "PRIVATE-TOKEN: ${token}" ${GITLAB_URL}/api/v4/projects/$PROJECT_ID/members  && \
+curl --request POST -d "user_id=$USER_ID&access_level=$ACCESS_LEVEL" --header "PRIVATE-TOKEN: ${token}" ${GITLAB_URL}/api/v4/projects/$PROJECT_ID/members &>/dev/null  && \
 echo -e $(ColorLightCyan "User $user_name has been granted Access Level: $ROLE to project: $project_name")
 }
 
@@ -126,6 +127,9 @@ curl -s --request GET --header "PRIVATE-TOKEN: ${token}" ${GITLAB_URL}/api/v4/gr
 
 # Create new project:
 # Will be available in next release
+
+
+
 
 
 ### ----------------------  SELECTION MENU SECTION -------------------------
